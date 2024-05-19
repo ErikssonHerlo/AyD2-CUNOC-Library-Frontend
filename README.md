@@ -1,4 +1,4 @@
-# CUNOC Library Frontend App
+# CUNOC Library Frontend
 
 ## Descripción
 Esta es una aplicación web diseñada para manejar y administrar una biblioteca en el CUNOC. La aplicación permite manejar usuarios, estudiantes, bibliotecarios, carreras, libros, préstamos, pagos, moras, etc.
@@ -6,8 +6,8 @@ Esta es una aplicación web diseñada para manejar y administrar una biblioteca 
 ## Instalación
 Para instalar y ejecutar esta aplicación, siga los siguientes pasos:
 
-1. Clonar el repositorio: `git clone <url_del_repositorio>`
-2. Navegar al directorio del proyecto: `cd CUNOC-Library-Frontend-App`
+1. Clonar el repositorio: `git clone https://github.com/ErikssonHerlo/AyD2-CUNOC-Library-Frontend.git`
+2. Navegar al directorio del proyecto: `cd AyD2-CUNOC-Library-Frontend`
 3. Instalar las dependencias: `npm install`
 4. Iniciar la aplicación: `npm run dev`
 
