@@ -1,17 +1,88 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import LoginLayout from '../../layout/LoginLayout';
 import Logo from '../../images/logo/usac-logo.png';
 import LogoDark from '../../images/logo/usac-logo.webp';
 import Library from '../../images/product/library.webp';
 import LoginDarkModeSwitcher from '../../components/Header/DarkModeSwitcher';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignIn: React.FC = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch(
+        'http://18.226.172.184:8080/api/v1/auth/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Login successful:', data);
+
+        // Asumiendo que el token está en `data.token`
+        const token = data.token;
+        console.log('Token:', token);
+
+        // Realizar la segunda petición con el token
+        const userInfoResponse = await fetch(
+          'http://18.226.172.184:8080/api/v1/user/info',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        if (userInfoResponse.ok) {
+          const userInfo = await userInfoResponse.json();
+          sessionStorage.setItem('authToken', data.token);
+          localStorage.setItem('UserInfo', JSON.stringify(userInfo.data));
+          if (userInfo.data.role === 'librarian') {
+            navigate('/librarian-dashboard');
+          }else if(userInfo.data.role === 'student'){
+            navigate('/student-dashboard');
+          }
+
+          // Navegar al dashboard
+        } else {
+          console.error('Failed to fetch user info');
+          showToastMessage();
+        }
+      } else {
+        console.error('Login failed');
+        showToastMessage();
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      showToastMessage();
+    }
+  };
+
+  const showToastMessage = () => {
+    toast.error('Credenciales incorrectas. Vuelve a intentarlo', {
+      position: toast.POSITION.BOTTOM_RIGHT,
+    });
+  };
+
   return (
     <LoginLayout>
-
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className='w-full flex justify-end pr-6 pt-6'>
+        <div className="w-full flex justify-end pr-6 pt-6">
           <LoginDarkModeSwitcher />
         </div>
         <div className="flex flex-wrap items-center">
@@ -21,11 +92,10 @@ const SignIn: React.FC = () => {
                 <img className="w-96 hidden dark:block" src={Logo} alt="Logo" />
                 <img className="w-96 dark:hidden" src={LogoDark} alt="Logo" />
               </Link>
-
               <p className="2xl:px-20">
-                Explora el gusto por el conocimiento: ¡Id y enseñad a todos en la Biblioteca Universitaria del CUNOC!
+                Explora el gusto por el conocimiento: ¡Id y enseñad a todos en
+                la Biblioteca Universitaria del CUNOC!
               </p>
-
               <span className="mt-15 inline-block">
                 <img className="w-72" src={Library} alt="Logo" />
               </span>
@@ -38,19 +108,19 @@ const SignIn: React.FC = () => {
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
                 Biblioteca CUNOC
               </h2>
-
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Carne / Usuario
                   </label>
                   <div className="relative">
                     <input
-                      type="email"
+                      type="text"
                       placeholder="Ingresa tu carne/usuario"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                     />
-
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -80,8 +150,9 @@ const SignIn: React.FC = () => {
                       type="password"
                       placeholder="Ingresa tu contraseña"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
-
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -127,6 +198,8 @@ const SignIn: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ToastContainer />
     </LoginLayout>
   );
 };
