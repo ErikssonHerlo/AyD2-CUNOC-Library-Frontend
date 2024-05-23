@@ -7,7 +7,6 @@ import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Calendar from './pages/Calendar';
 import Chart from './pages/Chart';
-import ECommerce from './pages/Dashboard/ECommerce';
 import FormElements from './pages/Form/FormElements';
 import FormLayout from './pages/Form/FormLayout';
 import Profile from './pages/Profile';
@@ -21,6 +20,10 @@ import LoanCreation from './pages/Form/LoanCreation';
 import ReservationCreation from './pages/Form/ReservationCreation';
 import UserCreation from './pages/Form/UserCreation';
 import CarreerCreation from  './pages/Form/CarreerCreation';
+import LibrarianDashboard from './pages/Dashboard/LibrarianDashboard';
+import StudentDashboard from './pages/Dashboard/StudentDashboard';
+import CarrerList from './pages/Tables/CarreerList';
+import UserList from './pages/Tables/UserList';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -43,8 +46,26 @@ function App() {
           index
           element={
             <>
-              <PageTitle title="eCommerce Dashboard | TailAdmin - Tailwind CSS Admin Dashboard Template" />
-              <ECommerce />
+              <PageTitle title="Sign In" />
+              <SignIn />  
+            </>
+          }
+        />
+        <Route
+          path="/librarian-dashboard"
+          element={
+            <>
+              <PageTitle title="Dashboard" />
+              <LibrarianDashboard /> 
+            </>
+          }
+        />
+        <Route
+          path="/student-dashboard"
+          element={
+            <>
+              <PageTitle title="Dashboard" />
+              <StudentDashboard /> 
             </>
           }
         />
@@ -52,7 +73,7 @@ function App() {
           path="/calendar"
           element={
             <>
-              <PageTitle title="Calendar | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Calendar | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Calendar />
             </>
           }
@@ -61,7 +82,7 @@ function App() {
           path="/profile"
           element={
             <>
-              <PageTitle title="Profile | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Profile | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Profile />
             </>
           }
@@ -70,7 +91,7 @@ function App() {
           path="/forms/form-elements"
           element={
             <>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Elements | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <FormElements />
             </>
           }
@@ -79,7 +100,7 @@ function App() {
           path="/forms/form-layout"
           element={
             <>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Layout | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <FormLayout />
             </>
           }
@@ -88,7 +109,7 @@ function App() {
           path="/tables"
           element={
             <>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Tables | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Tables />
             </>
           }
@@ -97,7 +118,7 @@ function App() {
           path="/settings"
           element={
             <>
-              <PageTitle title="Settings | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Settings | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Settings />
             </>
           }
@@ -106,7 +127,7 @@ function App() {
           path="/chart"
           element={
             <>
-              <PageTitle title="Basic Chart | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Basic Chart | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Chart />
             </>
           }
@@ -115,7 +136,7 @@ function App() {
           path="/ui/alerts"
           element={
             <>
-              <PageTitle title="Alerts | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Alerts | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Alerts />
             </>
           }
@@ -124,7 +145,7 @@ function App() {
           path="/ui/buttons"
           element={
             <>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Buttons | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <Buttons />
             </>
           }
@@ -133,7 +154,7 @@ function App() {
           path="/auth/signin"
           element={
             <>
-              <PageTitle title="Signin | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Signin | CUNOC Library - Tailwind CSS Admin Dashboard Template" />
               <SignIn />
             </>
           }
@@ -176,7 +197,7 @@ function App() {
         />
 
         <Route
-          path="/forms/user-creation"
+          path="/forms/user-creation/:id?"
           element={
             <>
               <PageTitle title="Creacion de usuarios" />
@@ -186,11 +207,31 @@ function App() {
         />
 
         <Route
-          path="/forms/carreer-creation"
+           path="/forms/carreer-creation/:id?"
           element={
             <>
               <PageTitle title="Creacion de carrera" />
               <CarreerCreation />
+            </>
+          }
+        />
+
+        <Route
+          path="/tables/carreers"
+          element={
+            <>
+              <PageTitle title="Lista de Carreras" />
+              <CarrerList />
+            </>
+          }
+        />
+
+        <Route
+          path="/tables/users"
+          element={
+            <>
+              <PageTitle title="Lista de Usuarios" />
+              <UserList />
             </>
           }
         />
