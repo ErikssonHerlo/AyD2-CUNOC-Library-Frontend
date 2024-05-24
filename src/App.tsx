@@ -58,7 +58,7 @@ function App() {
           element={
             <>
               <PageTitle title="Dashboard" />
-              <LibrarianDashboard />
+              <BookList />
             </>
           }
         />
@@ -67,7 +67,7 @@ function App() {
           element={
             <>
               <PageTitle title="Dashboard" />
-              <StudentDashboard />
+              <BookList />
             </>
           }
         />
