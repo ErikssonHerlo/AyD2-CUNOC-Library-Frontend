@@ -9,6 +9,7 @@ const CarreerCreation = () => {
   const navigate = useNavigate(); // Usar useNavigate para la navegación después del éxito
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
+  const [rol, setRol] = useState('user');
 
   const authToken = sessionStorage.getItem('authToken');
   if (!authToken) {
@@ -93,6 +94,26 @@ const CarreerCreation = () => {
       position: toast.POSITION.BOTTOM_RIGHT,
     });
   };
+
+  const getUserInfo = () => {
+    const userInfo = localStorage.getItem('UserInfo');
+    if (userInfo !== null) {
+      const userInfoObj = JSON.parse(userInfo);
+      return userInfoObj;
+    } else {
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    setRol(getUserInfo().role);
+  }, []);
+
+  useEffect(() => {
+    if (rol === 'student') {
+      navigate('/'); // Si el rol es estudiante, redirigir al inicio
+    }
+  }, [rol]);
 
   return (
     <DefaultLayout>

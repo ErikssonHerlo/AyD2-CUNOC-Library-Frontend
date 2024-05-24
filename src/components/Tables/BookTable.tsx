@@ -1,49 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { CompactTable } from '@table-library/react-table-library/compact';
-import { useTheme } from '@table-library/react-table-library/theme';
 import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 interface DataItem {
   [key: string]: any;
 }
-
-interface Column {
-  label: string;
-  renderCell: (item: DataItem) => React.ReactNode;
-}
-
-const theme = {
-  Table: `
-    --data-table-library_grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    font-size: 16px;
-    color: #ffffff;
-    background-color: #333333;
-    border-radius: 10px;
-    overflow-x: auto;
-    @media (max-width: 600px) {
-      --data-table-library_grid-template-columns: 1fr;
-    }
-  `,
-  HeaderRow: `
-    background-color: #1D2A39;
-  `,
-  HeaderCell: `
-    padding: 15px;
-  `,
-  Row: `
-    &:nth-of-type(odd) {
-      background-color: #fff;
-      color: #333;
-    }
-    &:nth-of-type(even) {
-      background-color: #1D2A39;
-    }
-  `,
-  Cell: `
-    padding: 15px;
-  `,
-};
 
 const fetchData = async (endpoint: string, token: string) => {
   const response = await fetch(endpoint + '/all', {
@@ -68,24 +29,24 @@ const deleteData = async (endpoint: string, token: string) => {
 
 interface TableCustomProps {
   endpoint: string;
-  columns: Column[];
   module: string;
   urlKey: string;
 }
 
-const TableCustom: React.FC<TableCustomProps> = ({
+const BookTable: React.FC<TableCustomProps> = ({
   endpoint,
-  columns,
   module,
-  urlKey
+  urlKey,
 }) => {
   const [data, setData] = useState<DataItem[]>([]);
   const [filteredData, setFilteredData] = useState<DataItem[]>([]);
   const [page, setPage] = useState(0);
-  const [size] = useState(10);
+  const [size] = useState(14);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const defaultImage =
+    'https://as2.ftcdn.net/v2/jpg/04/99/93/31/1000_F_499933117_ZAUBfv3P1HEOsZDrnkbNCt4jc3AodArl.jpg';
 
   const token = window.sessionStorage.getItem('authToken');
 
@@ -127,34 +88,11 @@ const TableCustom: React.FC<TableCustomProps> = ({
     navigate(`/forms/${module}/${item[urlKey]}`);
   };
 
-  const paginatedData = filteredData.slice(page * size, (page + 1) * size);
+  const handleResevation = (item: DataItem) => {
+    navigate(`/forms/reservation-creation/${item[urlKey]}`);
+  };
 
-  const fixedColumns = [
-    ...columns,
-    {
-      label: 'Actions',
-      renderCell: (item: DataItem) => (
-        <div className="flex flex-row items-center">
-          {module !== 'reservation-creation' && (
-            <FaEye
-            onClick={() => handleEdit(item)}
-            style={{ cursor: 'pointer', marginRight: '10px' }}
-          />
-          )}
-          {module !== 'reservation-creation' && (
-          <FaEdit
-            onClick={() => handleEdit(item)}
-            style={{ cursor: 'pointer', marginRight: '10px' }}
-          />
-          )}
-          <FaTrash
-            onClick={() => handleDelete(item[urlKey])}
-            style={{ cursor: 'pointer' }}
-          />
-        </div>
-      ),
-    },
-  ];
+  const paginatedData = filteredData.slice(page * size, (page + 1) * size);
 
   return (
     <div style={{ overflowX: 'auto' }}>
@@ -189,11 +127,73 @@ const TableCustom: React.FC<TableCustomProps> = ({
         </div>
       </div>
 
-      <CompactTable
-        columns={fixedColumns}
-        data={{ nodes: paginatedData }}
-        theme={useTheme(theme)}
-      />
+      <div className="flex ">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-7">
+          {paginatedData.map((book) => (
+            <div
+              key={book[urlKey]}
+              className="bg-white dark:bg-[#24303F] w-46 rounded-md"
+            >
+              <img
+                className="w-full h-72 object-cover rounded-t-md"
+                src={
+                  (book.cover_image.startsWith('http') ||
+                  book.cover_image.startsWith('https')) &&
+                  !book.cover_image.startsWith('https://example.com')
+                    ? book.cover_image
+                    : defaultImage
+                }
+                alt={book.title}
+                onClick={() => handleEdit(book)}
+              />
+              <div className="pl-2 py-2">
+                <h1 className="text-[#1D2A39] dark:text-white font-bold">
+                  {book.title}
+                </h1>
+                <div className='flex justify-between items-center'>
+                  <h2 className="text-sm text-[#3C50E0]">{book.author}</h2>
+                  <h2 className={`text-sm ${book.status === 'available' ? 'text-green-500' : 'text-red-500'} px-4`}>{book.status === 'available' ? 'Diponible' : 'No Disponible'}</h2>
+                </div>
+                <div className="flex flex-row justify-between items-center">
+                  <div className="flex">
+                    <FaEye
+                      style={{ cursor: 'pointer', marginRight: '10px' }}
+                      onClick={() => handleEdit(book)}
+                    />
+                    <FaEdit
+                      style={{ cursor: 'pointer', marginRight: '10px' }}
+                      onClick={() => handleEdit(book)}
+                    />
+                    <FaTrash
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleDelete(book[urlKey])}
+                    />
+                  </div>
+                  <div className="flex px-4 py-2">
+                    {book.status !== 'available' && (
+                      <button
+                        className="bg-[#3C50E0] text-white px-2 py-1 rounded-md text-sm"
+                        onClick={() => handleResevation(book)}
+                      >
+                        Reservar
+                      </button>
+                    )}
+                    {book.status === 'available' && (
+                      <button
+                        className="bg-[#3C50E0] text-white px-2 py-1 rounded-md text-sm"
+                        onClick={() => handleResevation(book)}
+                      >
+                        Prestar
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div
         style={{ display: 'flex', justifyContent: 'center', padding: '10px 0' }}
       >
@@ -214,4 +214,4 @@ const TableCustom: React.FC<TableCustomProps> = ({
   );
 };
 
-export default TableCustom;
+export default BookTable;
