@@ -19,11 +19,13 @@ import BookCreation from './pages/Form/BookCreation';
 import LoanCreation from './pages/Form/LoanCreation';
 import ReservationCreation from './pages/Form/ReservationCreation';
 import UserCreation from './pages/Form/UserCreation';
-import CarreerCreation from  './pages/Form/CarreerCreation';
+import CarreerCreation from './pages/Form/CarreerCreation';
 import LibrarianDashboard from './pages/Dashboard/LibrarianDashboard';
 import StudentDashboard from './pages/Dashboard/StudentDashboard';
 import CarrerList from './pages/Tables/CarreerList';
+import BookList from './pages/Tables/BookList';
 import UserList from './pages/Tables/UserList';
+import ReservationList from './pages/Tables/ReservationList';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -56,7 +58,7 @@ function App() {
           element={
             <>
               <PageTitle title="Dashboard" />
-              <LibrarianDashboard /> 
+              <BookList />
             </>
           }
         />
@@ -65,7 +67,7 @@ function App() {
           element={
             <>
               <PageTitle title="Dashboard" />
-              <StudentDashboard /> 
+              <BookList />
             </>
           }
         />
@@ -169,7 +171,7 @@ function App() {
           }
         />
         <Route
-          path="/forms/book-creation"
+          path="/forms/book-creation/:id?"
           element={
             <>
               <PageTitle title="Creacion de libro" />
@@ -186,8 +188,8 @@ function App() {
             </>
           }
         />
-         <Route
-          path="/forms/reservation-creation"
+        <Route
+          path="/forms/reservation-creation/:id?"
           element={
             <>
               <PageTitle title="Creacion de reservacion" />
@@ -207,7 +209,7 @@ function App() {
         />
 
         <Route
-           path="/forms/carreer-creation/:id?"
+          path="/forms/carreer-creation/:id?"
           element={
             <>
               <PageTitle title="Creacion de carrera" />
@@ -227,11 +229,31 @@ function App() {
         />
 
         <Route
+          path="/tables/books"
+          element={
+            <>
+              <PageTitle title="Libreria" />
+              <BookList />
+            </>
+          }
+        />
+
+      <Route
           path="/tables/users"
           element={
             <>
               <PageTitle title="Lista de Usuarios" />
               <UserList />
+            </>
+          }
+        />
+
+      <Route
+          path="/tables/reservations"
+          element={
+            <>
+              <PageTitle title="Lista de Reservaciones" />
+              <ReservationList />
             </>
           }
         />
